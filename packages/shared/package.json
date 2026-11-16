@@ -1,0 +1,17 @@
+{
+  "name": "@apuestas/shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src",
+    "test": "echo \"sin pruebas en shared\""
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "typescript": "~5.9.3"
+  }
+}
