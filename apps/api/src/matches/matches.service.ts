@@ -47,7 +47,7 @@ export class MatchesService {
       },
     });
 
-    await this.audit.record({
+    await this.audit.append({
       actorId,
       actorType: AuditActorType.ADMINISTRATOR,
       action: 'COMPETITION_CREATED',
@@ -129,7 +129,7 @@ export class MatchesService {
       include: { competition: true },
     });
 
-    await this.audit.record({
+    await this.audit.append({
       actorId,
       actorType: AuditActorType.ADMINISTRATOR,
       action: 'MATCH_CREATED',
@@ -189,7 +189,7 @@ export class MatchesService {
       return match;
     });
 
-    await this.audit.record({
+    await this.audit.append({
       actorId,
       actorType: AuditActorType.ADMINISTRATOR,
       action: 'MATCH_STATUS_TRANSITIONED',
@@ -245,7 +245,7 @@ export class MatchesService {
       include: { selections: true },
     });
 
-    await this.audit.record({
+    await this.audit.append({
       actorId,
       actorType: AuditActorType.ADMINISTRATOR,
       action: 'MARKET_CREATED',
@@ -275,7 +275,7 @@ export class MatchesService {
       include: { selections: true },
     });
 
-    await this.audit.record({
+    await this.audit.append({
       actorId,
       actorType: AuditActorType.ADMINISTRATOR,
       action: 'MARKET_STATUS_UPDATED',
@@ -305,7 +305,7 @@ export class MatchesService {
       data: { odds: new Prisma.Decimal(dto.odds.toFixed(2)) },
     });
 
-    await this.audit.record({
+    await this.audit.append({
       actorId,
       actorType: AuditActorType.ADMINISTRATOR,
       action: 'SELECTION_ODDS_UPDATED',
