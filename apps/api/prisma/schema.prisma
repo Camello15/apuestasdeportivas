@@ -171,4 +171,85 @@ model AuditEvent {
   @@index([occurredAt])
   @@index([actorId, occurredAt])
   @@map("audit_events")
+
+  enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  SUSPENDED
+  POSTPONED
+  CANCELLED
+}
+
+enum MarketStatus {
+  OPEN
+  SUSPENDED
+  CLOSED
+  SETTLED
+  VOID
+}
+
+model Competition {
+  id         String   @id @default(uuid()) @db.Uuid
+  externalId Int?     @unique @map("external_id")
+  name       String   @db.VarChar(160)
+  country    String   @db.VarChar(100)
+  sport      String   @default("FOOTBALL") @db.VarChar(50)
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  matches    Match[]
+
+  @@map("competitions")
+}
+
+model Match {
+  id            String      @id @default(uuid()) @db.Uuid
+  externalId    Int?        @unique @map("external_id")
+  competitionId String      @map("competition_id") @db.Uuid
+  homeTeam      String      @map("home_team") @db.VarChar(160)
+  awayTeam      String      @map("away_team") @db.VarChar(160)
+  startsAt      DateTime    @map("starts_at") @db.Timestamptz(6)
+  status        MatchStatus @default(SCHEDULED)
+  homeScore     Int?        @map("home_score")
+  awayScore     Int?        @map("away_score")
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Restrict)
+  markets       Market[]
+
+  @@index([status, startsAt])
+  @@index([competitionId])
+  @@map("matches")
+}
+
+model Market {
+  id         String       @id @default(uuid()) @db.Uuid
+  matchId    String       @map("match_id") @db.Uuid
+  type       String       @db.VarChar(64)
+  name       String       @db.VarChar(160)
+  status     MarketStatus @default(OPEN)
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  match      Match        @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  selections Selection[]
+
+  @@index([matchId, status])
+  @@map("markets")
+}
+
+model Selection {
+  id        String   @id @default(uuid()) @db.Uuid
+  marketId  String   @map("market_id") @db.Uuid
+  code      String   @db.VarChar(64)
+  label     String   @db.VarChar(160)
+  odds      Decimal  @db.Decimal(10, 2)
+  isWinner  Boolean? @map("is_winner")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  market    Market   @relation(fields: [marketId], references: [id], onDelete: Cascade)
+
+  @@unique([marketId, code])
+  @@map("selections")
+}
 }
