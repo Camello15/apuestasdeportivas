@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("MIGRATION_DATABASE_URL")
 }
 
@@ -28,21 +28,21 @@ enum AuditActorType {
 }
 
 model User {
-  id                   String              @id @default(uuid()) @db.Uuid
-  email                String              @db.VarChar(320)
-  normalizedEmail      String              @unique @map("normalized_email") @db.VarChar(320)
-  passwordHash         String              @map("password_hash") @db.VarChar(255)
-  ageDeclared          Boolean             @map("age_declared")
-  emailVerifiedAt      DateTime?           @map("email_verified_at") @db.Timestamptz(6)
-  status               UserStatus          @default(PENDING_EMAIL)
-  createdAt            DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
-  userRoles            UserRole[]
-  sessions             AuthSession[]
-  emailActionTokens    EmailActionToken[]
-  totpCredential       TotpCredential?
-  totpRecoveryCodes    TotpRecoveryCode[]
-  auditEvents          AuditEvent[]         @relation("AuditActor")
+  id                String             @id @default(uuid()) @db.Uuid
+  email             String             @db.VarChar(320)
+  normalizedEmail   String             @unique @map("normalized_email") @db.VarChar(320)
+  passwordHash      String             @map("password_hash") @db.VarChar(255)
+  ageDeclared       Boolean            @map("age_declared")
+  emailVerifiedAt   DateTime?          @map("email_verified_at") @db.Timestamptz(6)
+  status            UserStatus         @default(PENDING_EMAIL)
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  userRoles         UserRole[]
+  sessions          AuthSession[]
+  emailActionTokens EmailActionToken[]
+  totpCredential    TotpCredential?
+  totpRecoveryCodes TotpRecoveryCode[]
+  auditEvents       AuditEvent[]       @relation("AuditActor")
 
   @@map("users")
 }
@@ -57,9 +57,9 @@ model Role {
 }
 
 model Permission {
-  id          String           @id @default(uuid()) @db.Uuid
-  name        String           @unique @db.VarChar(128)
-  roleLinks   RolePermission[]
+  id        String           @id @default(uuid()) @db.Uuid
+  name      String           @unique @db.VarChar(128)
+  roleLinks RolePermission[]
 
   @@map("permissions")
 }
@@ -86,14 +86,14 @@ model UserRole {
 }
 
 model AuthSession {
-  id          String              @id @default(uuid()) @db.Uuid
-  userId      String              @map("user_id") @db.Uuid
-  familyId    String              @map("family_id") @db.Uuid
-  createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
-  expiresAt   DateTime            @map("expires_at") @db.Timestamptz(6)
-  revokedAt   DateTime?           @map("revoked_at") @db.Timestamptz(6)
-  revokeReason String?            @map("revoke_reason") @db.VarChar(128)
-  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String              @id @default(uuid()) @db.Uuid
+  userId             String              @map("user_id") @db.Uuid
+  familyId           String              @map("family_id") @db.Uuid
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiresAt          DateTime            @map("expires_at") @db.Timestamptz(6)
+  revokedAt          DateTime?           @map("revoked_at") @db.Timestamptz(6)
+  revokeReason       String?             @map("revoke_reason") @db.VarChar(128)
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   refreshCredentials RefreshCredential[]
 
   @@index([userId, revokedAt])
@@ -102,43 +102,43 @@ model AuthSession {
 }
 
 model RefreshCredential {
-  id          String      @id @default(uuid()) @db.Uuid
-  sessionId   String      @map("session_id") @db.Uuid
-  digest      String      @unique @db.VarChar(128)
-  jti         String      @unique @db.VarChar(64)
-  expiresAt   DateTime    @map("expires_at") @db.Timestamptz(6)
-  consumedAt  DateTime?   @map("consumed_at") @db.Timestamptz(6)
-  revokedAt   DateTime?   @map("revoked_at") @db.Timestamptz(6)
-  replacedBy  String?     @map("replaced_by") @db.Uuid
-  session     AuthSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  id         String      @id @default(uuid()) @db.Uuid
+  sessionId  String      @map("session_id") @db.Uuid
+  digest     String      @unique @db.VarChar(128)
+  jti        String      @unique @db.VarChar(64)
+  expiresAt  DateTime    @map("expires_at") @db.Timestamptz(6)
+  consumedAt DateTime?   @map("consumed_at") @db.Timestamptz(6)
+  revokedAt  DateTime?   @map("revoked_at") @db.Timestamptz(6)
+  replacedBy String?     @map("replaced_by") @db.Uuid
+  session    AuthSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   @@index([sessionId, expiresAt])
   @@map("refresh_credentials")
 }
 
 model EmailActionToken {
-  id          String          @id @default(uuid()) @db.Uuid
-  userId      String          @map("user_id") @db.Uuid
-  type        EmailActionType
-  digest      String          @unique @db.VarChar(128)
-  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
-  expiresAt   DateTime        @map("expires_at") @db.Timestamptz(6)
-  consumedAt  DateTime?       @map("consumed_at") @db.Timestamptz(6)
-  invalidatedAt DateTime?     @map("invalidated_at") @db.Timestamptz(6)
-  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String          @id @default(uuid()) @db.Uuid
+  userId        String          @map("user_id") @db.Uuid
+  type          EmailActionType
+  digest        String          @unique @db.VarChar(128)
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiresAt     DateTime        @map("expires_at") @db.Timestamptz(6)
+  consumedAt    DateTime?       @map("consumed_at") @db.Timestamptz(6)
+  invalidatedAt DateTime?       @map("invalidated_at") @db.Timestamptz(6)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, type, expiresAt])
   @@map("email_action_tokens")
 }
 
 model TotpCredential {
-  id                    String    @id @default(uuid()) @db.Uuid
-  userId                String    @unique @map("user_id") @db.Uuid
-  secretCiphertext      String    @map("secret_ciphertext") @db.Text
-  keyVersion            String    @map("key_version") @db.VarChar(64)
-  enabledAt             DateTime? @map("enabled_at") @db.Timestamptz(6)
-  lastAcceptedTotpStep  BigInt?   @map("last_accepted_totp_step")
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String    @id @default(uuid()) @db.Uuid
+  userId               String    @unique @map("user_id") @db.Uuid
+  secretCiphertext     String    @map("secret_ciphertext") @db.Text
+  keyVersion           String    @map("key_version") @db.VarChar(64)
+  enabledAt            DateTime? @map("enabled_at") @db.Timestamptz(6)
+  lastAcceptedTotpStep BigInt?   @map("last_accepted_totp_step")
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("totp_credentials")
 }
@@ -156,23 +156,24 @@ model TotpRecoveryCode {
 }
 
 model AuditEvent {
-  id          String         @id @default(uuid()) @db.Uuid
-  actorId     String?        @map("actor_id") @db.Uuid
-  actorType   AuditActorType @map("actor_type")
-  action      String         @db.VarChar(128)
-  occurredAt  DateTime       @default(now()) @map("occurred_at") @db.Timestamptz(6)
-  ipAddress   String?        @map("ip_address") @db.VarChar(64)
-  device      String?        @db.VarChar(512)
-  targetType  String?        @map("target_type") @db.VarChar(64)
-  targetId    String?        @map("target_id") @db.VarChar(128)
-  metadata    Json?
-  actor       User?          @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  id         String         @id @default(uuid()) @db.Uuid
+  actorId    String?        @map("actor_id") @db.Uuid
+  actorType  AuditActorType @map("actor_type")
+  action     String         @db.VarChar(128)
+  occurredAt DateTime       @default(now()) @map("occurred_at") @db.Timestamptz(6)
+  ipAddress  String?        @map("ip_address") @db.VarChar(64)
+  device     String?        @db.VarChar(512)
+  targetType String?        @map("target_type") @db.VarChar(64)
+  targetId   String?        @map("target_id") @db.VarChar(128)
+  metadata   Json?
+  actor      User?          @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
 
   @@index([occurredAt])
   @@index([actorId, occurredAt])
   @@map("audit_events")
+}
 
-  enum MatchStatus {
+enum MatchStatus {
   SCHEDULED
   LIVE
   FINISHED
@@ -251,5 +252,4 @@ model Selection {
 
   @@unique([marketId, code])
   @@map("selections")
-}
 }
