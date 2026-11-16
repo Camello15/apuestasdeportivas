@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "prisma generate && nest build",
+    "postinstall": "prisma generate",
     "start": "node dist/main.js",
     "admin:provision": "node dist/main.js provision-admin",
     "auth:seed": "node dist/main.js auth:seed",
@@ -14,7 +15,7 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "lint": "eslint src test",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "prisma generate && tsc --noEmit",
     "test": "jest"
   },
   "jest": {

@@ -10,6 +10,10 @@ jobs:
   node:
     name: Lint, tipos, tests y build (Node)
     runs-on: ubuntu-latest
+    env:
+      # Prisma parses both datasource URLs during generate; no database is contacted.
+      DATABASE_URL: "postgresql://ci:ci@127.0.0.1:5432/ci?schema=public"
+      MIGRATION_DATABASE_URL: "postgresql://ci:ci@127.0.0.1:5432/ci?schema=public"
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
