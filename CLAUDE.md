@@ -4,7 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Estado del proyecto
 
-Proyecto académico (UTPL) en fase inicial: todavía no hay código. La especificación completa está en `promtp.md` y es la fuente de verdad de requisitos; léela antes de implementar cualquier funcionalidad. Los principios no negociables del proyecto están en `.specify/memory/constitution.md` (Spec Kit) y prevalecen sobre este archivo. El orden de construcción, las decisiones técnicas base y los criterios de cierre de cada fase están en `PLAN.md`. Cuando se creen los `package.json` / `pyproject.toml`, añade aquí los comandos reales de build, lint y tests (incluido cómo ejecutar un solo test).
+Proyecto académico (UTPL). Existe el esqueleto del monorepo (Spec 001): tres apps con `/health`, CI y Docker Compose; aún no hay lógica de negocio. La especificación completa está en `promtp.md` y es la fuente de verdad de requisitos; léela antes de implementar cualquier funcionalidad. Los principios no negociables del proyecto están en `.specify/memory/constitution.md` (Spec Kit) y prevalecen sobre este archivo. El orden de construcción, las decisiones técnicas base y los criterios de cierre de cada fase están en `PLAN.md`.
+
+## Comandos
+
+- Node (desde la raíz): `pnpm install`, `pnpm dev`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`.
+- Un solo test de la API: `pnpm --filter @apuestas/api test -- health`.
+- Reportes (Python, desde `apps/reports`): `uv sync`, `uv run pytest`, `uv run ruff check .`.
+- Infraestructura local: `docker compose up -d` (PostgreSQL y Redis; copiar `.env.example` a `.env`).
 
 ## Arquitectura prevista
 
@@ -41,6 +48,7 @@ La seguridad antifraude es el criterio prioritario del proyecto. Al tocar dinero
 - Para trabajo de UI, usar el skill `frontend-design` instalado en `.claude/skills/`.
 
 <!-- SPECKIT START -->
+
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
 <!-- SPECKIT END -->

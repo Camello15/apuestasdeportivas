@@ -1,0 +1,18 @@
+# Blueprint de Render (staging desde develop). Ajustar al crear los servicios.
+services:
+  - type: web
+    name: apuestas-api
+    runtime: node
+    rootDir: .
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @apuestas/api build
+    startCommand: node apps/api/dist/main.js
+    healthCheckPath: /health
+    branch: develop
+  - type: web
+    name: apuestas-reports
+    runtime: python
+    rootDir: apps/reports
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    branch: develop

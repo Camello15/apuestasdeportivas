@@ -9,3 +9,8 @@ __pycache__/
 dist/
 coverage/
 .turbo/
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.tsbuildinfo
+next-env.d.ts
