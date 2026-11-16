@@ -1,4 +1,4 @@
-# Tasks: Fundaciones del monorepo
+﻿# Tasks: Fundaciones del monorepo
 
 **Input**: [spec.md](./spec.md), [plan.md](./plan.md)
 
@@ -21,11 +21,11 @@
 
 - [x] T010 [US2] Workflow `.github/workflows/ci.yml` (lint, tipos, tests, build, SonarQube opcional)
 - [x] T011 [US2] Plantillas de issue y Pull Request
-- [ ] T012 [US2] Proteger `main` y `develop` en GitHub (PR obligatorio, CI requerido)
+- [x] T012 [US2] Proteger `main` y `develop` en GitHub (PR obligatorio, CI requerido)
 
 ## Phase 4: User Story 3 — Despliegue y trazabilidad (P2)
 
-- [ ] T013 [US3] Crear proyecto en Vercel para `apps/web` (staging desde `develop`)
+- [x] T013 [US3] Crear proyecto en Vercel para `apps/web` (staging desde `develop`)
 - [ ] T014 [US3] Crear servicios en Render con `render.yaml` (api y reports)
 - [ ] T015 [US3] Activar SonarQube Cloud: `SONAR_TOKEN` y variable `SONAR_ENABLED=true`
 - [ ] T016 [US3] Dashboard de Grafana Cloud con datasource de GitHub
@@ -33,4 +33,4 @@
 ## Polish
 
 - [x] T017 README y comandos reales en `CLAUDE.md`
-- [ ] T018 Abrir PR a `develop` y verificar CI en verde
+- [x] T018 Abrir PR a `develop` y verificar CI en verde
