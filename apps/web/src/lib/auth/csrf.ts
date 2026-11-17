@@ -20,6 +20,19 @@ export function hasTrustedOrigin(request: NextRequest, expectedOrigin: string): 
   return request.headers.get('origin') === expectedOrigin;
 }
 
+// Same-origin GET requests carry no Origin header (Fetch spec). When it is
+// absent, accept only a browser-asserted same-origin fetch (Sec-Fetch-Site is a
+// forbidden header, so page scripts cannot set it) aimed at the expected host.
+export function hasTrustedFetchSource(request: NextRequest, expectedOrigin: string | undefined): boolean {
+  if (!expectedOrigin) return false;
+  const origin = request.headers.get('origin');
+  if (origin !== null) return origin === expectedOrigin;
+  let expectedHost: string;
+  try { expectedHost = new URL(expectedOrigin).host; } catch { return false; }
+  return request.headers.get('sec-fetch-site') === 'same-origin'
+    && request.headers.get('host') === expectedHost;
+}
+
 export function hasValidCsrfToken(request: NextRequest, secret: string | undefined): boolean {
   if (!hasCsrfSecret(secret)) return false;
   const cookieToken = request.cookies.get('csrf_token')?.value;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createCsrfToken, hasCsrfSecret, hasTrustedOrigin, hasValidCsrfToken } from '../../../../src/lib/auth/csrf';
+import { createCsrfToken, hasCsrfSecret, hasTrustedFetchSource, hasTrustedOrigin, hasValidCsrfToken } from '../../../../src/lib/auth/csrf';
 
 const publicRegistrationPaths = new Set([
   '/auth/register',
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ pa
 
 export async function GET(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
   const { path } = await context.params;
-  if (path.join('/') !== 'auth/csrf' || request.headers.get('origin') !== process.env.WEB_ORIGIN) {
+  if (path.join('/') !== 'auth/csrf' || !hasTrustedFetchSource(request, process.env.WEB_ORIGIN)) {
     return NextResponse.json({ code: 'REQUEST_REJECTED', message: 'La solicitud fue rechazada.' }, { status: 403 });
   }
   if (!hasCsrfSecret(process.env.CSRF_SECRET)) {
