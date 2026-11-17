@@ -1,16 +1,11 @@
-# Blueprint de Render (staging desde develop). Ajustar al crear los servicios.
+# Blueprint de Render (staging desde develop).
+# La API se despliega cuando esten definidos Postgres, Redis y las variables
+# de entorno del spec 002 (ver apps/api/src/config/env.validation.ts).
 services:
-  - type: web
-    name: apuestas-api
-    runtime: node
-    rootDir: .
-    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @apuestas/api build
-    startCommand: node apps/api/dist/main.js
-    healthCheckPath: /health
-    branch: develop
   - type: web
     name: apuestas-reports
     runtime: python
+    plan: free
     rootDir: apps/reports
     buildCommand: pip install uv && uv sync --frozen --no-dev
     startCommand: uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
